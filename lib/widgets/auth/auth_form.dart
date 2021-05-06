@@ -23,6 +23,8 @@ class AuthForm extends StatefulWidget {
 
 class _AuthFormState extends State<AuthForm> {
   final _formKey = GlobalKey<FormState>();
+  final _passwordController = TextEditingController();
+
   var _isLogin = true;
   String _userEmail = '';
   String _userName = '';
@@ -116,6 +118,7 @@ class _AuthFormState extends State<AuthForm> {
                     decoration: InputDecoration(
                       labelText: 'Password',
                     ),
+                    controller: _passwordController,
                     obscureText: true,
                     key: ValueKey('password'),
                     validator: (value) {
@@ -126,6 +129,19 @@ class _AuthFormState extends State<AuthForm> {
                     },
                     onSaved: (value) {
                       _userPassword = value;
+                    },
+                  ),
+                  if (!_isLogin)
+                    TextFormField(
+                    decoration: InputDecoration(
+                      labelText: 'Confirm password',
+                    ),
+                    obscureText: true,
+                    validator: (value) {
+                      if (value != _passwordController.text) {
+                        return 'Passwords do not match';
+                      }
+                      return null;
                     },
                   ),
                   SizedBox(height: 12),
