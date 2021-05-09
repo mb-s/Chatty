@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 
 import '../widgets/settings/settings_item.dart';
+import '../widgets/settings/user_settings.dart';
 
 class SettingsScreen extends StatelessWidget {
   @override
@@ -11,10 +12,7 @@ class SettingsScreen extends StatelessWidget {
       ),
       body: ListView(
         children: [
-          SettingsItem(
-            Icons.account_circle_outlined,
-            'User settings',
-          ),
+          UserSettings(),
           SettingsItem(
             Icons.color_lens_outlined,
             'Theme',
