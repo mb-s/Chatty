@@ -46,6 +46,8 @@ class ChatScreen extends StatelessWidget {
             onChanged: (itemIdentifier) {
               if (itemIdentifier == 'logout') {
                 FirebaseAuth.instance.signOut();
+              } else if (itemIdentifier == 'settings') {
+                Navigator.of(context).pushNamed('/settings');
               }
             },
           )

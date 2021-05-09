@@ -4,6 +4,7 @@ import 'package:firebase_auth/firebase_auth.dart';
 import './screens/chat_screen.dart';
 import './screens/auth_screen.dart';
 import './screens/splash_screen.dart';
+import './screens/settings_screen.dart';
 
 void main() {
   runApp(MyApp());
@@ -41,6 +42,9 @@ class MyApp extends StatelessWidget {
           return AuthScreen();
         },
       ),
+      routes: {
+        '/settings': (ctx) => SettingsScreen(),
+      },
     );
   }
 }
