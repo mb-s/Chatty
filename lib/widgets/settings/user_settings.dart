@@ -24,7 +24,7 @@ class _UserSettingsState extends State<UserSettings> {
 
   void _updateUserDetails(String id) async {
     FocusScope.of(context).unfocus();
-    if (_userNameController.text.isEmpty ||
+    if (_userNameController.text.trim().isEmpty ||
         _userNameController.text.length < 4) {
       Scaffold.of(context).showSnackBar(
         SnackBar(
@@ -42,8 +42,15 @@ class _UserSettingsState extends State<UserSettings> {
             .child('user_images')
             .child(id + '.jpg');
 
-        await ref.delete();
         await ref.putFile(_newUserImage).onComplete;
+        final imageUrl = await ref.getDownloadURL();
+
+        await Firestore.instance.collection('users').document(id).updateData(
+          {
+            'imageUrl': imageUrl,
+            'username': _userNameController.text,
+          },
+        );
       }
       await Firestore.instance.collection('users').document(id).updateData(
         {
