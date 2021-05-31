@@ -22,10 +22,10 @@ class _UserSettingsState extends State<UserSettings> {
     _newUserImage = image;
   }
 
-  void _updateUserDetails(String id) async {
+  void _updateUserDetails(String id, String username) async {
     FocusScope.of(context).unfocus();
     if (_userNameController.text.trim().isEmpty ||
-        _userNameController.text.length < 4) {
+        _userNameController.text.trim().length < 4) {
       Scaffold.of(context).showSnackBar(
         SnackBar(
           content: Text('Username must be at least 4 characters.'),
@@ -48,15 +48,22 @@ class _UserSettingsState extends State<UserSettings> {
         await Firestore.instance.collection('users').document(id).updateData(
           {
             'imageUrl': imageUrl,
-            'username': _userNameController.text,
+            'username': _userNameController.text.trim(),
           },
         );
+
+        Navigator.of(context)
+            .pushNamedAndRemoveUntil('/', (Route<dynamic> route) => false);
+      } else if (_userNameController.text.trim() != username) {
+        await Firestore.instance.collection('users').document(id).updateData(
+          {
+            'username': _userNameController.text.trim(),
+          },
+        );
+
+        Navigator.of(context)
+            .pushNamedAndRemoveUntil('/', (Route<dynamic> route) => false);
       }
-      await Firestore.instance.collection('users').document(id).updateData(
-        {
-          'username': _userNameController.text,
-        },
-      );
     } on PlatformException catch (error) {
       var message = 'An error occurred. Please check your credentials.';
 
@@ -124,7 +131,7 @@ class _UserSettingsState extends State<UserSettings> {
                   SizedBox(height: 20),
                   RaisedButton(
                     child: Text('Update'),
-                    onPressed: () => _updateUserDetails(id),
+                    onPressed: () => _updateUserDetails(id, username),
                   ),
                 ],
               ),
