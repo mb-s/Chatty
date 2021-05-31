@@ -7,39 +7,51 @@ import './message_bubble.dart';
 class Messages extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
-    return FutureBuilder(
-      future: FirebaseAuth.instance.currentUser(),
-      builder: (ctx, futureSnapshot) {
-        if (futureSnapshot.connectionState == ConnectionState.waiting) {
-          return Center(
-            child: CircularProgressIndicator(),
-          );
-        }
-        return StreamBuilder(
-          stream: Firestore.instance
-              .collection('chat')
-              .orderBy('createdAt', descending: true)
-              .snapshots(),
-          builder: (ctx, chatSnapshot) {
-            if (chatSnapshot.connectionState == ConnectionState.waiting) {
+        return FutureBuilder(
+          future: Future.wait(
+              [FirebaseAuth.instance.currentUser(), Firestore.instance.collection('users').getDocuments()]),
+          builder: (ctx, futureSnapshot) {
+            if (futureSnapshot.connectionState == ConnectionState.waiting) {
               return Center(
                 child: CircularProgressIndicator(),
               );
             }
-            final chatDocs = chatSnapshot.data.documents;
-            return ListView.builder(
-              reverse: true,
-              itemCount: chatDocs.length,
-              itemBuilder: (ctx, index) => MessageBubble(
-                chatDocs[index]['text'],
-                chatDocs[index]['userId'],
-                chatDocs[index]['userId'] == futureSnapshot.data.uid,
-                key: ValueKey(chatDocs[index].documentID),
-              ),
+
+            Map usersDetails = {};
+            futureSnapshot.data[1].documents.forEach((user) {
+              usersDetails[user.documentID] = {
+                'username': user['username'],
+                'imageUrl': user['imageUrl'],
+              };
+            });
+
+            return StreamBuilder(
+              stream: Firestore.instance
+                  .collection('chat')
+                  .orderBy('createdAt', descending: true)
+                  .snapshots(),
+              builder: (ctx, chatSnapshot) {
+                if (chatSnapshot.connectionState == ConnectionState.waiting) {
+                  return Center(
+                    child: CircularProgressIndicator(),
+                  );
+                }
+                final chatDocs = chatSnapshot.data.documents;
+
+                return ListView.builder(
+                  reverse: true,
+                  itemCount: chatDocs.length,
+                  itemBuilder: (ctx, index) => MessageBubble(
+                    chatDocs[index]['text'],
+                    usersDetails[futureSnapshot.data[0].uid]['username'],
+                    usersDetails[futureSnapshot.data[0].uid]['imageUrl'],
+                    chatDocs[index]['userId'] == futureSnapshot.data[0].uid,
+                    key: ValueKey(chatDocs[index].documentID),
+                  ),
+                );
+              },
             );
           },
         );
-      },
-    );
   }
 }
