@@ -30,18 +30,6 @@ class MyApp extends StatelessWidget {
         ),
         visualDensity: VisualDensity.adaptivePlatformDensity,
       ),
-      // home: StreamBuilder(
-      //   stream: FirebaseAuth.instance.onAuthStateChanged,
-      //   builder: (ctx, userSanpshot) {
-      //     if (userSanpshot.connectionState == ConnectionState.waiting) {
-      //       return SplashScreen();
-      //     }
-      //     if (userSanpshot.hasData) {
-      //       return ChatScreen();
-      //     }
-      //     return AuthScreen();
-      //   },
-      // ),
       routes: {
         '/': (ctx) => StreamBuilder(
               stream: FirebaseAuth.instance.onAuthStateChanged,
