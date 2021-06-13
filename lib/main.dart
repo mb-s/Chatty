@@ -5,13 +5,13 @@ import './screens/chat_screen.dart';
 import './screens/auth_screen.dart';
 import './screens/splash_screen.dart';
 import './screens/user_settings_screen.dart';
+import './screens/users_screen.dart';
 
 void main() {
   runApp(MyApp());
 }
 
 class MyApp extends StatelessWidget {
-  // This widget is the root of your application.
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
@@ -44,6 +44,7 @@ class MyApp extends StatelessWidget {
               },
             ),
         '/user-settings': (ctx) => UserSettingsScreen(),
+        '/users': (ctx) => UsersScreen(),
       },
     );
   }
