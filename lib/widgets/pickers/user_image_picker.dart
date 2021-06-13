@@ -16,10 +16,13 @@ class UserImagePicker extends StatefulWidget {
 class _UserImagePickerState extends State<UserImagePicker> {
   File _pickedImage;
 
-  void _pickImage() async {
+  void _pickImage(bool sourceIsCam) async {
     final picker = ImagePicker();
+
+    Navigator.of(context).pop();
+
     final pickedImage = await picker.getImage(
-      source: ImageSource.camera,
+      source: sourceIsCam ? ImageSource.camera : ImageSource.gallery,
       imageQuality: 50,
       maxWidth: 150,
     );
@@ -28,6 +31,28 @@ class _UserImagePickerState extends State<UserImagePicker> {
       _pickedImage = pickedImageFile;
     });
     widget.imagePickFn(_pickedImage);
+  }
+
+  void _pickSource() {
+    showDialog(
+      context: context,
+      child: AlertDialog(
+        content: Row(
+          children: [
+            FlatButton.icon(
+              label: Text('Camera'),
+              icon: Icon(Icons.camera_alt_outlined),
+              onPressed: () => _pickImage(true),
+            ),
+            FlatButton.icon(
+              label: Text('Gallery'),
+              icon: Icon(Icons.image_outlined),
+              onPressed: () => _pickImage(false),
+            ),
+          ],
+        ),
+      ),
+    );
   }
 
   @override
@@ -44,11 +69,10 @@ class _UserImagePickerState extends State<UserImagePicker> {
                 ? FileImage(_pickedImage)
                 : NetworkImage(widget.originalImage),
           ),
-          FlatButton.icon(
+          FlatButton(
             textColor: Theme.of(context).primaryColor,
-            onPressed: _pickImage,
-            icon: Icon(Icons.camera_alt_outlined),
-            label: Text('Change Image'),
+            onPressed: _pickSource,
+            child: Text('Change Image'),
           ),
         ],
       );
@@ -62,11 +86,10 @@ class _UserImagePickerState extends State<UserImagePicker> {
               _pickedImage != null ? FileImage(_pickedImage) : null,
           backgroundColor: Colors.grey,
         ),
-        FlatButton.icon(
+        FlatButton(
           textColor: Theme.of(context).primaryColor,
-          onPressed: _pickImage,
-          icon: Icon(Icons.camera_alt_outlined),
-          label: Text('Add Image'),
+          onPressed: _pickSource,
+          child: Text('Add Image'),
         ),
       ],
     );
