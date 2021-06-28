@@ -101,39 +101,41 @@ class UserSettingsScreen extends StatelessWidget {
 
               _userNameController.text = username;
 
-              return Padding(
-                padding: const EdgeInsets.all(20),
-                child: Column(
-                  children: [
-                    UserImagePicker(
-                      _pickedImage,
-                      snapshot.data['imageUrl'],
-                    ),
-                    TextField(
-                      key: _userNameKey,
-                      decoration: InputDecoration(
-                        labelText: 'Username',
+              return SingleChildScrollView(
+                child: Padding(
+                  padding: const EdgeInsets.all(20),
+                  child: Column(
+                    children: [
+                      UserImagePicker(
+                        _pickedImage,
+                        snapshot.data['imageUrl'],
                       ),
-                      autocorrect: true,
-                      controller: _userNameController,
-                      textCapitalization: TextCapitalization.words,
-                      enableSuggestions: false,
-                    ),
-                    TextField(
-                      decoration: InputDecoration(
-                        labelText: 'Email',
+                      TextField(
+                        key: _userNameKey,
+                        decoration: InputDecoration(
+                          labelText: 'Username',
+                        ),
+                        autocorrect: true,
+                        controller: _userNameController,
+                        textCapitalization: TextCapitalization.words,
+                        enableSuggestions: false,
                       ),
-                      controller: new TextEditingController(
-                          text: snapshot.data['email']),
-                      readOnly: true,
-                    ),
-                    SizedBox(height: 20),
-                    RaisedButton(
-                      child: Text('Update'),
-                      onPressed: () =>
-                          _updateUserDetails(id, username, context),
-                    ),
-                  ],
+                      TextField(
+                        decoration: InputDecoration(
+                          labelText: 'Email',
+                        ),
+                        controller: new TextEditingController(
+                            text: snapshot.data['email']),
+                        readOnly: true,
+                      ),
+                      SizedBox(height: 20),
+                      RaisedButton(
+                        child: Text('Update'),
+                        onPressed: () =>
+                            _updateUserDetails(id, username, context),
+                      ),
+                    ],
+                  ),
                 ),
               );
             },
